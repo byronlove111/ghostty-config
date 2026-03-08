@@ -1,0 +1,39 @@
+# ──────────────────────────────────────────────
+#  Ghostty — config by Byron
+# ──────────────────────────────────────────────
+
+# ── Police ────────────────────────────────────
+font-family = "JetBrains Mono Nerd Font"
+font-size = 14
+font-thicken = true
+
+# ── Thème ─────────────────────────────────────
+theme = TokyoNight
+
+# ── Fenêtre ───────────────────────────────────
+background-opacity = 0.94
+macos-titlebar-style = tabs
+
+# ── Curseur ───────────────────────────────────
+cursor-style = bar
+cursor-style-blink = true
+
+# ── Confort ───────────────────────────────────
+scrollback-limit = 10000
+mouse-hide-while-typing = true
+copy-on-select = false
+confirm-close-surface = false
+
+# ── Shader ────────────────────────────────────
+custom-shader = ~/.config/ghostty/shaders/bloom.glsl
+
+# ── Raccourcis ────────────────────────────────
+keybind = cmd+t=new_tab
+keybind = cmd+w=close_surface
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+keybind = cmd+shift+enter=toggle_fullscreen
+keybind = opt+tab=goto_split:next
+keybind = opt+shift+tab=goto_split:previous
+keybind = opt+1=goto_split:left
+keybind = opt+2=goto_split:right
