@@ -11,7 +11,8 @@ font-thicken = true
 theme = TokyoNight
 
 # ── Fenêtre ───────────────────────────────────
-background-opacity = 0.94
+background-opacity = 0.65
+background-blur-radius = 60
 macos-titlebar-style = tabs
 
 # ── Curseur ───────────────────────────────────

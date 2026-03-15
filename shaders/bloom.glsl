@@ -1,5 +1,6 @@
 // source: https://gist.github.com/qwerasd205/c3da6c610c8ffe17d6d2d3cc7068f17f
 // credits: https://github.com/qwerasd205
+// Enhanced by Byron — dual-pass bloom (inner glow + outer halo)
 // Golden spiral samples, [x, y, weight] weight is inverse of distance.
 const vec3[24] samples = {
   vec3(0.1693761725038636, 0.9855514761735895, 1),
@@ -32,21 +33,39 @@ float lum(vec4 c) {
   return 0.299 * c.r + 0.587 * c.g + 0.114 * c.b;
 }
 
+// Boost saturation so TokyoNight colors pop in the glow
+vec3 saturate_bloom(vec3 col, float factor) {
+  float l = lum(vec4(col, 1.0));
+  return mix(vec3(l), col, factor);
+}
+
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 uv = fragCoord.xy / iResolution.xy;
-
   vec4 color = texture(iChannel0, uv);
 
-  vec2 step = vec2(1.414) / iResolution.xy;
+  // Inner glow — tight, bright, saturated
+  vec2 step_inner = vec2(2.8) / iResolution.xy;
+  // Outer halo — wide, soft, dreamy
+  vec2 step_outer = vec2(6.5) / iResolution.xy;
+
+  vec4 bloom = vec4(0.0);
 
   for (int i = 0; i < 24; i++) {
     vec3 s = samples[i];
-    vec4 c = texture(iChannel0, uv + s.xy * step);
-    float l = lum(c);
-    if (l > 0.2) {
-      color += l * s.z * c * 0.03;
+
+    vec4 ci = texture(iChannel0, uv + s.xy * step_inner);
+    float li = lum(ci);
+    if (li > 0.12) {
+      vec3 boosted = saturate_bloom(ci.rgb, 1.5);
+      bloom += vec4(boosted, ci.a) * li * s.z * 0.052;
+    }
+
+    vec4 co = texture(iChannel0, uv + s.xy * step_outer);
+    float lo = lum(co);
+    if (lo > 0.10) {
+      bloom += co * lo * s.z * 0.030;
     }
   }
 
-  fragColor = color;
+  fragColor = color + bloom * 0.75;
 }
