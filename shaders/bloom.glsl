@@ -44,9 +44,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec4 color = texture(iChannel0, uv);
 
   // Inner glow — tight, bright, saturated
-  vec2 step_inner = vec2(2.8) / iResolution.xy;
+  vec2 step_inner = vec2(2.0) / iResolution.xy;
   // Outer halo — wide, soft, dreamy
-  vec2 step_outer = vec2(6.5) / iResolution.xy;
+  vec2 step_outer = vec2(5.5) / iResolution.xy;
 
   vec4 bloom = vec4(0.0);
 
@@ -55,17 +55,17 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
     vec4 ci = texture(iChannel0, uv + s.xy * step_inner);
     float li = lum(ci);
-    if (li > 0.12) {
-      vec3 boosted = saturate_bloom(ci.rgb, 1.5);
-      bloom += vec4(boosted, ci.a) * li * s.z * 0.052;
+    if (li > 0.15) {
+      vec3 boosted = saturate_bloom(ci.rgb, 1.3);
+      bloom += vec4(boosted, ci.a) * li * s.z * 0.040;
     }
 
     vec4 co = texture(iChannel0, uv + s.xy * step_outer);
     float lo = lum(co);
-    if (lo > 0.10) {
-      bloom += co * lo * s.z * 0.030;
+    if (lo > 0.12) {
+      bloom += co * lo * s.z * 0.022;
     }
   }
 
-  fragColor = color + bloom * 0.75;
+  fragColor = color + bloom * 0.60;
 }
